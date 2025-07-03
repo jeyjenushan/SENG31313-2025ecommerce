@@ -4,6 +4,7 @@ const dotenv=require("dotenv")
 const connectToDB=require("./db/connectToMongoDb")
 const authRoutes=require("./routes/auth.routes")
 const productRoutes=require("./routes/product.routes")
+const cartRoutes=require("./routes/cart.routes")
 const cookieParser = require("cookie-parser")
 
 
@@ -17,7 +18,8 @@ const PORT=process.env.PORT
 
 app.use(cookieParser())
 app.use("/api/auth",authRoutes)
-app.use("/api/product",productRoutes)
+app.use("/api/products",productRoutes)
+app.use("/api/cart",cartRoutes)
 
 
 

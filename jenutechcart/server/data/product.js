@@ -1,4 +1,4 @@
-import assets from "../../client/src/assets/assets"
+const assets =require( "../../client/src/assets/assets.cjs")
 
 const products=[
   {

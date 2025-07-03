@@ -1,17 +1,34 @@
 const Product=require("../models/product.model")
 
 
+const createProduct=async(req,res)=>{
+    try {
+        const{name,description,category,material,room,brand,price,discountPrice,original_price,rating,num_reviews,images,countInStock,colorss,country_of_origin,weight}=req.body
+
+        const product=new Product({name,description,category,material,room,brand,price,discountPrice,original_price,rating,num_reviews,images,countInStock,colorss,country_of_origin,weight,user:req.user._id})
+        
+        const createdProduct=await product.save()
+        res.status(201).json(createdProduct)
+
+    } catch (error) {
+                console.error(error)
+        res.status(500).send("Internal Server Error")
+    }
+}
+
+
+
 //retrieve all products
 const getAllProducts=async(req,res)=>{
     try {
-        const {color,minPrice,maxPrice,sortBy,search,limit,
+        const {colors,minPrice,maxPrice,sortBy,search,limit,
             category,material,room,country_of_origin,
      }=req.query;
 
      let query={}
 
 
-  // Filter by category (using enum values)
+
   if (category && category.toLowerCase() !== "all") {
           query.category=category;
   }
@@ -22,7 +39,7 @@ const getAllProducts=async(req,res)=>{
     query.room=room
   }
     if(country_of_origin){
-    query.country_of_origin=room
+    query.country_of_origin=country_of_origin
   }
 
    if(minPrice|| maxPrice){
@@ -34,9 +51,12 @@ const getAllProducts=async(req,res)=>{
         query.price.$lte=Number(maxPrice)
     }
    }
-     if(color){
-            query.color={$in: [color]}
-        }
+if (colors) {
+    const colorsArray = typeof colors === 'string' 
+        ? colors.split(',').map(c => c.trim()) 
+        : colors;
+    query.colors = { $in: colorsArray };
+}
 
      if(search){
         query.$or=[
@@ -95,6 +115,7 @@ try {
 }
 }
 
+//retrieve seller products
 const bestSellerProducts=async(req,res)=>{
     try{
         const bestSeller=await Product.findOne().sort({rating:-1})
@@ -111,6 +132,7 @@ const bestSellerProducts=async(req,res)=>{
 }
 
 
+//retrieve single product
 const getSingleProduct=async(req,res)=>{
     try {
         const product=await Product.findById(req.params.id)
@@ -128,6 +150,7 @@ const getSingleProduct=async(req,res)=>{
 
 }
 
+//retrieve similar products
 const similarProducts=async(req,res)=>{
     try {
         const {id}=req.params;
@@ -136,8 +159,7 @@ const similarProducts=async(req,res)=>{
             return res.status(404).json({message:"Product not found"})
         }
         const similarProducts=await Product.find({
-            _id:{$ne:id},
-            gender:product.gender,
+            _id:{$ne:id},            
             category:product.category
         }).limit(4)
         res.json(similarProducts)
@@ -156,5 +178,5 @@ const similarProducts=async(req,res)=>{
 module.exports={
     similarProducts,newArrivalProduts,
     getSingleProduct,bestSellerProducts,
-    getAllProducts
+    getAllProducts,createProduct
 }

@@ -1,6 +1,23 @@
 const mongoose=require("mongoose")
-const cartItem = require("./cartItem.model")
 
+
+const CartItemSchema=new mongoose.Schema({
+    productId:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Product",
+        required:true
+    },
+    name:String,
+    image:String,
+    price:String,
+    size:String,
+    color:String,
+    category:String,
+    quantity:{
+        type:Number,
+        default:1
+    }
+})
 
 const CartSchema=new mongoose.Schema(
     {
@@ -8,7 +25,7 @@ const CartSchema=new mongoose.Schema(
             type:mongoose.Schema.Types.ObjectId,
             ref:"User"
         },
-        products:[cartItem],
+        products:[CartItemSchema],
         totalPrice:{
             type:Number,
             required:true,
