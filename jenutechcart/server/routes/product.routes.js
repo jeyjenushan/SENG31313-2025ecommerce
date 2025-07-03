@@ -6,10 +6,11 @@ const router=express.Router()
 
 router.post("/",protectRoute,adminRoute,createProduct)
 router.get("/",getAllProducts)
-router.get("/new-arrivals",newArrivalProduts)
-router.get("/best-seller",bestSellerProducts)
 router.get("/:id",getSingleProduct)
 router.get("/similar/:id",similarProducts)
+router.get("/new-arrivals",newArrivalProduts)
+router.get("/best-seller",bestSellerProducts)
+
 
 module.exports=router
 
