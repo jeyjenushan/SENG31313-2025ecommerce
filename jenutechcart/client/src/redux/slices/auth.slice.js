@@ -25,7 +25,8 @@ export const loginUser=createAsyncThunk("auth/loginUser",async(userData,{rejectW
         localStorage.setItem("userInfo", JSON.stringify(data.user));
       }
 
-        return data.user;
+      console.log(data)
+        return data;
         
     } catch (error) {
         return rejectWithValue(error.response.data)
@@ -36,21 +37,11 @@ export const loginUser=createAsyncThunk("auth/loginUser",async(userData,{rejectW
 
 })
 
-export const registerUser=createAsyncThunk("auth/registerUser",async(userData,{rejectWithValue})=>{
+export const registerUser=createAsyncThunk("auth/registerUser",async(formData,{rejectWithValue})=>{
 
     try {
 
-             // Create FormData object to handle file upload
-      const formData = new FormData();
-      formData.append("name", userData.name);
-      formData.append("email", userData.email);
-      formData.append("password", userData.password);
-      formData.append("confirmPassword", userData.confirmPassword);
-      
-      // Append the image file if it exists
-      if (userData.image) {
-        formData.append("image", userData.image);
-      }
+ 
 
         const {data}=await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/signup`,formData,{
             withCredentials:true,
@@ -61,8 +52,8 @@ export const registerUser=createAsyncThunk("auth/registerUser",async(userData,{r
   if (data.user) {
         localStorage.setItem("userInfo", JSON.stringify(data.user));
       }
-
-        return data.user;
+ console.log(data)
+        return data;
         
     } catch (error) {
         return rejectWithValue(error.response.data)
@@ -96,7 +87,7 @@ export const logoutUser=createAsyncThunk("auth/logOutUser",async(_,{rejectWithVa
 })
 
 
-export const getProfileInformation=createAsyncThunk("auth/logOutUser",async(_,{rejectWithValue})=>{
+export const getProfileInformation=createAsyncThunk("auth/getProfileInformation",async(_,{rejectWithValue})=>{
 
     try {
         const {data}=await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/auth/profile`,{},{

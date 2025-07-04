@@ -84,14 +84,7 @@ const login=async(req,res)=>{
         }
       const payload={user:{id:user._id,role:user.role}}
       const token=  generateTokenAndSetCookie(payload,res)
-        res.status(200).json({
-                _id:user._id,
-                name:user.name,
-                email:user.email,
-                image:user.image,
-                role:user.role,
-                token
-            })
+        res.status(200).json(user)
         
 
     } catch (error) {
@@ -121,17 +114,12 @@ const getPersonalData = async (req, res) => {
             return res.status(401).json({ error: "User not authenticated" });
         }
 
-        const userData = {
-            _id: user._id,
-            name: user.name,
-            email: user.email,
-            image: user.image,
-            role: user.role
+         
     
-        };
+
 
       
-        res.status(200).json(userData);
+        res.status(200).json(user);
 
     } catch (error) {
         console.error("Error in getPersonalData:", error.message);
