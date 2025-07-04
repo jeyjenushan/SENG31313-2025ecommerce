@@ -1,4 +1,3 @@
-const express=require("express")
 const Product=require("../models/product.model")
 const Cart = require("../models/cart.model")
 const jwt=require("jsonwebtoken")
@@ -17,6 +16,25 @@ const getCart=async(userId)=>{
     return null;
 }
 
+
+// Helper function to update product stock
+const updateProductStock = async (productId, quantityChange) => {
+    const product = await Product.findById(productId)
+    if (!product) throw new Error("Product not found")
+    
+    product.countInStock += quantityChange
+    if (product.countInStock < 0) {
+        throw new Error("Not enough stock available")
+    }
+    
+    await product.save()
+    return product
+}
+
+
+
+
+
 //@route Post /api/cart
 //@desc Add a product to the cart for a guest or logged in user
 //@access Public
@@ -26,7 +44,15 @@ const createCart= async(req,res)=>{
     const {productId,quantity,category,color}=req.body;
     try {
         const product=await Product.findById(productId)
-        if(!product)return res.status(401).json({message:"Product not found"})
+        if(!product)return res.status(401).json({message:"Product not found"});
+
+            // Check available stock
+        if (product.countInStock < quantity) {
+            return res.status(400).json({ message: "Not enough stock available" })
+        }
+       
+
+
         
         let cart=await getCart(userId)    
         if(cart){
@@ -36,8 +62,28 @@ const createCart= async(req,res)=>{
 
             if(productIndex>-1){
                 //if the product already exists,update the quantity
-                cart.products[productIndex].quantity+=quantity
+            const newTotalQuantity = cart.products[productIndex].quantity + quantity
+
+
+                if (product.countInStock < newTotalQuantity) {
+                    return res.status(400).json({ message: "Not enough stock available for additional quantity" })
+                }
+  
+                  // Update stock for the additional quantity
+                await updateProductStock(productId, -quantity)
+
+                    // Update the quantity in cart
+                cart.products[productIndex].quantity = newTotalQuantity
+
+
+
+
+
             }else{
+
+                 // Add new product to cart
+                await updateProductStock(productId, -quantity)
+
                 //add new product
                 cart.products.push({
                     productId,
@@ -56,6 +102,9 @@ const createCart= async(req,res)=>{
         await cart.save()
         return res.status(200).json(cart)
         }else{
+
+            // Create a new cart for guest or user
+            await updateProductStock(productId, -quantity)
             //create a new cart for guest or user
             const newCart=await Cart.create({
                 user: userId? userId:undefined,
@@ -101,11 +150,26 @@ const updateCart=async(req,res)=>{
     
 
         if(productIndex>-1){
+        
+            const currentItem = cart.products[productIndex]
+            const product = await Product.findById(productId)    
+            
             //Update Quantity
             if(quantity>0){
-            cart.products[productIndex].quantity=quantity;
+            
+            const quantityDifference = quantity - currentItem.quantity;
+            if (product.countInStock < quantityDifference) {
+                    return res.status(400).json({ message: "Not enough stock available" })
+                }
+                
+                            // Update the stock
+                await updateProductStock(productId, -quantityDifference)
+                
+                // Update quantity in cart
+                currentItem.quantity = quantity    
 
             }else{
+              await updateProductStock(productId, currentItem.quantity)
                 cart.products.splice(productIndex,1)
 
             }
@@ -140,6 +204,9 @@ try {
     const productIndex=cart.products.findIndex((p)=>p.productId.toString()==productId  && p.color==color && p.category==category)
 
     if(productIndex>-1){
+                    // Return the stock to inventory
+        const item = cart.products[productIndex]
+        await updateProductStock(productId, item.quantity)
         cart.products.splice(productIndex,1);
         cart.totalPrice=cart.products.reduce((acc,item)=>acc+item.price*item.quantity,0);
         await cart.save();

@@ -1,4 +1,5 @@
 import { Package, ChefHat, Home, Sparkles } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Categories = () => {
   const categories = [
@@ -23,7 +24,7 @@ const Categories = () => {
       icon: Home,
       description: "Intelligent automation for modern living",
       image:
-        "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400&h=300&fit=crop",
+        "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=1200",
       color: "from-amber-600 to-amber-700",
     },
     {
@@ -35,6 +36,13 @@ const Categories = () => {
       color: "from-yellow-400 to-amber-500",
     },
   ];
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
 
   return (
     <section className="py-16 bg-gradient-to-b from-white to-amber-50/30">
@@ -60,40 +68,45 @@ const Categories = () => {
                 className="group relative overflow-hidden rounded-2xl bg-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                {/* Category Image */}
-                <div className="relative h-48 overflow-hidden">
-                  <img
-                    src={category.image}
-                    alt={category.name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                  />
-                  <div
-                    className={`absolute inset-0 bg-gradient-to-t ${category.color} opacity-60 group-hover:opacity-70 transition-opacity duration-300`}
-                  ></div>
+                <Link
+                  to={`/collections/all?category=${category.name}`}
+                  onClick={scrollToTop}
+                >
+                  {/* Category Image */}
+                  <div className="relative h-48 overflow-hidden">
+                    <img
+                      src={category.image}
+                      alt={category.name}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    />
+                    <div
+                      className={`absolute inset-0 bg-gradient-to-t ${category.color} opacity-60 group-hover:opacity-70 transition-opacity duration-300`}
+                    ></div>
 
-                  {/* Icon */}
-                  <div className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm rounded-full p-2">
-                    <Icon className="w-6 h-6 text-white" />
+                    {/* Icon */}
+                    <div className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm rounded-full p-2">
+                      <Icon className="w-6 h-6 text-white" />
+                    </div>
                   </div>
-                </div>
 
-                {/* Category Info */}
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold text-slate-900 mb-2 group-hover:text-amber-800 transition-colors duration-200">
-                    {category.name}
-                  </h3>
-                  <p className="text-slate-600 text-sm mb-4">
-                    {category.description}
-                  </p>
+                  {/* Category Info */}
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold text-slate-900 mb-2 group-hover:text-amber-800 transition-colors duration-200">
+                      {category.name}
+                    </h3>
+                    <p className="text-slate-600 text-sm mb-4">
+                      {category.description}
+                    </p>
 
-                  {/* CTA Button */}
-                  <button className="w-full bg-amber-100 hover:bg-amber-200 text-amber-800 font-medium py-2 px-4 rounded-lg transition-colors duration-200">
-                    Explore {category.name}
-                  </button>
-                </div>
+                    {/* CTA Button */}
+                    <button className="w-full bg-amber-100 hover:bg-amber-200 text-amber-800 font-medium py-2 px-4 rounded-lg transition-colors duration-200">
+                      Explore {category.name}
+                    </button>
+                  </div>
 
-                {/* Hover Effect Border */}
-                <div className="absolute inset-0 rounded-2xl border-2 border-transparent group-hover:border-amber-300 transition-colors duration-300"></div>
+                  {/* Hover Effect Border */}
+                  <div className="absolute inset-0 rounded-2xl border-2 border-transparent group-hover:border-amber-300 transition-colors duration-300"></div>
+                </Link>
               </div>
             );
           })}

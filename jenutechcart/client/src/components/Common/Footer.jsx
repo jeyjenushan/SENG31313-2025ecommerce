@@ -41,7 +41,7 @@ const Footer = () => {
 
         {/* Shopping Section */}
         <div className="bg-white p-6 rounded-lg shadow-md">
-          <h3 className="text-lg font-bold text-amber-800 mb-4">Shop</h3>
+          <h3 className="text-lg font-bold text-amber-800 mb-4">Categories</h3>
           <ul className="space-y-3 text-amber-700">
             <li>
               <Link
@@ -49,7 +49,7 @@ const Footer = () => {
                 className="hover:text-amber-600 transition-colors flex items-center"
               >
                 <span className="w-2 h-2 bg-amber-400 rounded-full mr-2"></span>
-                Men's Top Wear
+                Furniture
               </Link>
             </li>
             <li>
@@ -58,7 +58,7 @@ const Footer = () => {
                 className="hover:text-amber-600 transition-colors flex items-center"
               >
                 <span className="w-2 h-2 bg-amber-400 rounded-full mr-2"></span>
-                Women's Top Wear
+                Cookware
               </Link>
             </li>
             <li>
@@ -67,7 +67,7 @@ const Footer = () => {
                 className="hover:text-amber-600 transition-colors flex items-center"
               >
                 <span className="w-2 h-2 bg-amber-400 rounded-full mr-2"></span>
-                Men's Bottom Wear
+                Smart Home
               </Link>
             </li>
             <li>
@@ -76,7 +76,7 @@ const Footer = () => {
                 className="hover:text-amber-600 transition-colors flex items-center"
               >
                 <span className="w-2 h-2 bg-amber-400 rounded-full mr-2"></span>
-                Women's Bottom Wear
+                Cleaning
               </Link>
             </li>
           </ul>

@@ -25,7 +25,7 @@ const getAllProducts=async(req,res)=>{
             category,material,room,country_of_origin,
      }=req.query;
 
-     let query={}
+     let query={countInStock:{$gt:0}}
 
 
 
@@ -103,22 +103,31 @@ let products=await Product.find(query)
 
 
 
-//retrieve latest products
-const newArrivalProduts=async(req,res)=>{
-try {
-    const newArrivals=await Product.find().sort({createdAt:-1}).limit(8)
-    res.status(200).json(newArrivals)
-    
-} catch (error) {
-        console.error(error)
-        res.status(500).json({message:error.message})
-}
-}
+// Retrieve latest products (new arrivals)
+const getNewArrivalProducts = async (req, res) => {
+  try {
+    const newArrivals = await Product.find({countInStock:{$gt:0}})
+      .sort({ createdAt: -1 }) // Sort by creation date (newest first)
+      .limit(8); // Limit to 8 products
+
+    if (!newArrivals || newArrivals.length === 0) {
+      return res.status(404).json({ message: "No new arrival products found" });
+    }
+
+    res.status(200).json(newArrivals);
+  } catch (error) {
+    console.error("Error fetching new arrivals:", error);
+    res.status(500).json({ 
+      message: "Failed to fetch new arrival products",
+      error: error.message 
+    });
+  }
+};
 
 //retrieve seller products
 const bestSellerProducts=async(req,res)=>{
     try{
-        const bestSeller=await Product.findOne().sort({rating:-1})
+        const bestSeller=await Product.findOne({countInStock:{$gt:0}}).sort({rating:-1})
         if(bestSeller){
             res.json(bestSeller)
         }else{
@@ -135,7 +144,10 @@ const bestSellerProducts=async(req,res)=>{
 //retrieve single product
 const getSingleProduct=async(req,res)=>{
     try {
-        const product=await Product.findById(req.params.id)
+           const product = await Product.findOne({
+            _id: req.params.id,
+            countInStock: {$gt: 0}
+        });
         if(product){
             res.json(product)
         }else{
@@ -158,10 +170,11 @@ const similarProducts=async(req,res)=>{
         if(!product){
             return res.status(404).json({message:"Product not found"})
         }
-        const similarProducts=await Product.find({
-            _id:{$ne:id},            
-            category:product.category
-        }).limit(4)
+         const similarProducts = await Product.find({
+            _id: {$ne: id},
+            category: product.category,
+            countInStock: {$gt: 0}
+        }).limit(4);
         res.json(similarProducts)
 
 
@@ -176,7 +189,7 @@ const similarProducts=async(req,res)=>{
 
 
 module.exports={
-    similarProducts,newArrivalProduts,
+    similarProducts,getNewArrivalProducts,
     getSingleProduct,bestSellerProducts,
     getAllProducts,createProduct
 }

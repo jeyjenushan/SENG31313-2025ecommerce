@@ -1,113 +1,78 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import ProductGrid from "./ProductGrid";
-import { Link } from "react-router-dom";
-
-// Dummy data for the product
-const product = {
-  _id: "1",
-  name: "Modern Wooden Coffee Table",
-  description:
-    "Handcrafted wooden coffee table with sleek modern design. Perfect for contemporary living spaces. Features a durable finish that resists scratches and stains.",
-  category: "Furniture",
-  material: "Solid Oak Wood",
-  room: "Living Room",
-  brand: "FurniCraft",
-  price: 199.99,
-  originalPrice: 249.99,
-  rating: 4.5,
-  numReviews: 32,
-  images: [
-    {
-      url: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc",
-      altText: "Wooden coffee table front view",
-    },
-    {
-      url: "https://images.unsplash.com/photo-1567538096630-e0c55bd6374c",
-      altText: "Wooden coffee table side view",
-    },
-    {
-      url: "https://images.unsplash.com/photo-1583845112203-454c5e27a055",
-      altText: "Wooden coffee table top view",
-    },
-    {
-      url: "https://images.unsplash.com/photo-1592078615290-033ee584e267",
-      altText: "Wooden coffee table in living room",
-    },
-  ],
-  countInStock: 15,
-  colors: ["#8B4513", "#000000"], // Brown and Black
-  dimensions: "120cm × 60cm × 45cm",
-  weight: 25.5,
-  countryOfOrigin: "United States",
-  warranty: "2 years",
-};
-
-// Dummy similar products
-const similarProducts = [
-  {
-    _id: "2",
-    name: "Minimalist Side Table",
-    price: 149.99,
-    images: [
-      {
-        url: "https://images.unsplash.com/photo-1604076913837-52ab5629fba9",
-        altText: "Minimalist side table",
-      },
-    ],
-  },
-  {
-    _id: "3",
-    name: "Modern Console Table",
-    price: 299.99,
-    images: [
-      {
-        url: "https://images.unsplash.com/photo-1600210492493-0946911123ea",
-        altText: "Modern console table",
-      },
-    ],
-  },
-  {
-    _id: "4",
-    name: "Industrial Coffee Table",
-    price: 229.99,
-    images: [
-      {
-        url: "https://images.unsplash.com/photo-1600585152220-90363fe7e115",
-        altText: "Industrial coffee table",
-      },
-    ],
-  },
-  {
-    _id: "5",
-    name: "Scandinavian End Table",
-    price: 179.99,
-    images: [
-      {
-        url: "https://images.unsplash.com/photo-1556228453-efd6c1ff04f6",
-        altText: "Scandinavian end table",
-      },
-    ],
-  },
-];
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchProductDetails,
+  fetchSimilarProducts,
+} from "../../redux/slices/product.slice";
+import { addToCart } from "../../redux/slices/cart.slice";
 
 const ProductDetails = () => {
-  const [mainImage, setMainImage] = useState(product.images[0].url);
-  const [selectedColor, setSelectedColor] = useState(product.colors[0]);
+  const { id } = useParams();
+  const { selectedProduct, loading, error, similarProducts } = useSelector(
+    (state) => state.products
+  );
+  const [mainImage, setMainImage] = useState();
+  const [selectedColor, setSelectedColor] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { user } = useSelector((state) => state.auth);
 
   const handleQuantityChange = (action) => {
     if (action === "plus") setQuantity((prev) => prev + 1);
     if (action === "minus" && quantity > 1) setQuantity((prev) => prev - 1);
   };
 
+  useEffect(() => {
+    if (id) {
+      dispatch(fetchProductDetails(id));
+      dispatch(fetchSimilarProducts({ id }));
+    }
+  }, [dispatch, id]);
+
+  useEffect(() => {
+    if (selectedProduct?.images?.length > 0) {
+      setMainImage(selectedProduct.images[0].url);
+    }
+  }, [selectedProduct]);
+
   const handleAddToCart = () => {
+    if (!user) {
+      navigate("/login");
+    }
+
     setIsButtonDisabled(true);
-    toast.success(`${product.name} added to cart!`, {
-      duration: 1000,
-    });
-    setTimeout(() => setIsButtonDisabled(false), 1000);
+
+    dispatch(
+      addToCart({
+        productId: id,
+        quantity,
+        category: selectedProduct.category,
+        color: selectedColor,
+      })
+    )
+      .unwrap()
+      .then((response) => {
+        if (response.status == 200) {
+          toast.success(`${selectedProduct.name} added to cart!`, {
+            duration: 1000,
+          });
+        } else {
+          // Handle any backend validation errors
+          toast.error(response.message);
+        }
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      })
+      .finally(() => {
+        setIsButtonDisabled(false);
+      });
   };
 
   return (
@@ -139,7 +104,7 @@ const ProductDetails = () => {
               <div className="flex items-center">
                 <span className="mx-2 text-gray-400">/</span>
                 <span className="text-sm font-medium text-amber-600">
-                  {product.name}
+                  {selectedProduct?.name}
                 </span>
               </div>
             </li>
@@ -152,7 +117,7 @@ const ProductDetails = () => {
             {/* Image Gallery */}
             <div className="md:w-1/2 p-6">
               <div className="hidden md:flex flex-col space-y-4 mr-6 float-left">
-                {product.images.map((image, index) => (
+                {selectedProduct?.images.map((image, index) => (
                   <img
                     src={image.url}
                     key={index}
@@ -170,7 +135,7 @@ const ProductDetails = () => {
               {/* Main Image */}
               <div className="md:ml-28">
                 <img
-                  src={mainImage}
+                  src={mainImage || selectedProduct?.images[0].url}
                   alt="Main Product"
                   className="w-full h-96 object-contain rounded-lg"
                 />
@@ -178,7 +143,7 @@ const ProductDetails = () => {
 
               {/* Mobile Thumbnails */}
               <div className="md:hidden flex space-x-4 mt-4 overflow-x-auto pb-2">
-                {product.images.map((image, index) => (
+                {selectedProduct?.images.map((image, index) => (
                   <img
                     src={image.url}
                     key={index}
@@ -198,10 +163,10 @@ const ProductDetails = () => {
             <div className="md:w-1/2 p-6 border-l border-gray-100">
               <div className="mb-4">
                 <span className="bg-amber-100 text-amber-800 text-xs font-medium px-2.5 py-0.5 rounded">
-                  {product.brand}
+                  {selectedProduct?.brand}
                 </span>
                 <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mt-2">
-                  {product.name}
+                  {selectedProduct?.name}
                 </h1>
                 <div className="flex items-center mt-2">
                   <div className="flex items-center">
@@ -209,7 +174,7 @@ const ProductDetails = () => {
                       <svg
                         key={i}
                         className={`w-4 h-4 ${
-                          i < Math.floor(product.rating)
+                          i < Math.floor(selectedProduct?.rating)
                             ? "text-amber-400"
                             : "text-gray-300"
                         }`}
@@ -222,32 +187,38 @@ const ProductDetails = () => {
                       </svg>
                     ))}
                     <span className="text-gray-600 text-sm ml-1">
-                      {product.rating} ({product.numReviews} reviews)
+                      {selectedProduct?.rating} ({selectedProduct?.numReviews}{" "}
+                      reviews)
                     </span>
                   </div>
                 </div>
               </div>
 
               <div className="mb-6">
-                {product.originalPrice && (
+                {selectedProduct?.originalPrice && (
                   <span className="text-lg text-gray-500 line-through mr-2">
-                    ${product.originalPrice}
+                    ${selectedProduct?.originalPrice}
                   </span>
                 )}
                 <span className="text-2xl font-bold text-gray-900">
-                  ${product.price}
+                  ${selectedProduct?.price}
                 </span>
-                {product.originalPrice && (
+                {selectedProduct?.originalPrice && (
                   <span className="ml-2 text-sm bg-red-100 text-red-800 px-2 py-0.5 rounded">
                     {Math.round(
-                      (1 - product.price / product.originalPrice) * 100
+                      (1 -
+                        selectedProduct?.price /
+                          selectedProduct?.originalPrice) *
+                        100
                     )}
                     % OFF
                   </span>
                 )}
               </div>
 
-              <p className="text-gray-700 mb-6">{product.description}</p>
+              <p className="text-gray-700 mb-6">
+                {selectedProduct?.description}
+              </p>
 
               {/* Color Selection */}
               <div className="mb-6">
@@ -255,7 +226,7 @@ const ProductDetails = () => {
                   Color
                 </h3>
                 <div className="flex gap-3">
-                  {product.colors.map((color, index) => (
+                  {selectedProduct?.colors.map((color, index) => (
                     <button
                       key={index}
                       onClick={() => setSelectedColor(color)}
@@ -319,8 +290,8 @@ const ProductDetails = () => {
                   </button>
                 </div>
                 <p className="text-xs text-gray-500 mt-1">
-                  {product.countInStock > 0
-                    ? `${product.countInStock} available in stock`
+                  {selectedProduct?.countInStock > 0
+                    ? `${selectedProduct?.countInStock} available in stock`
                     : "Out of stock"}
                 </p>
               </div>
@@ -346,27 +317,24 @@ const ProductDetails = () => {
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
                     <p className="text-gray-500">Category</p>
-                    <p className="text-gray-900">{product.category}</p>
+                    <p className="text-gray-900">{selectedProduct?.category}</p>
                   </div>
                   <div>
                     <p className="text-gray-500">Material</p>
-                    <p className="text-gray-900">{product.material}</p>
+                    <p className="text-gray-900">{selectedProduct?.material}</p>
                   </div>
-                  <div>
-                    <p className="text-gray-500">Dimensions</p>
-                    <p className="text-gray-900">{product.dimensions}</p>
-                  </div>
+
                   <div>
                     <p className="text-gray-500">Weight</p>
-                    <p className="text-gray-900">{product.weight} kg</p>
+                    <p className="text-gray-900">
+                      {selectedProduct?.weight} kg
+                    </p>
                   </div>
                   <div>
                     <p className="text-gray-500">Origin</p>
-                    <p className="text-gray-900">{product.countryOfOrigin}</p>
-                  </div>
-                  <div>
-                    <p className="text-gray-500">Warranty</p>
-                    <p className="text-gray-900">{product.warranty}</p>
+                    <p className="text-gray-900">
+                      {selectedProduct?.countryOfOrigin}
+                    </p>
                   </div>
                 </div>
               </div>

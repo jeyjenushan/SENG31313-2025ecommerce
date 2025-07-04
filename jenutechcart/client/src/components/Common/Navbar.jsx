@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useState, useRef, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
   Smartphone,
@@ -17,32 +17,53 @@ import {
   Phone,
 } from "lucide-react";
 
-import CartSidebar from "./CartSidebar";
-import { logoutUser } from "../../redux/slices/auth.slice";
+import {
+  getProfileInformation,
+  logoutUser,
+} from "../../redux/slices/auth.slice";
+import CartSidebar from "../Cart/CartSidebar";
+import {
+  fetchProductsByFilters,
+  setFilters,
+} from "../../redux/slices/product.slice";
 
 const Navbar = () => {
   const location = useLocation();
   const dispatch = useDispatch();
-  const { user, isAuthenticated } = useSelector((state) => state.auth);
-  const { items: cartItems } = useSelector((state) => state.cart);
-
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-
   const profileDropdownRef = useRef(null);
   const searchRef = useRef(null);
+  const navigate = useNavigate();
+
+  //USE SELECTOR USING
+  const { cart } = useSelector((state) => state.cart);
+  const { user, isAuthenticated, isInitialized } = useSelector(
+    (state) => state.auth
+  );
+
+  // Replace your current initialization useEffect with this:
+  useEffect(() => {
+    const storedUser = localStorage.getItem("userInfo");
+    if (storedUser && !user) {
+      dispatch(getProfileInformation());
+    }
+  }, [dispatch, user]);
+
+  //Cart Item Count
+  const cartItemCount =
+    cart?.products?.reduce((total, product) => total + product.quantity, 0) ||
+    0;
 
   const navItems = [
     { name: "Home", path: "/", icon: Home },
-    { name: "Products", path: "/collections/:collection", icon: Package },
+    { name: "Products", path: "/collections/all", icon: Package },
     { name: "About", path: "/about", icon: Info },
     { name: "Contact", path: "/contact", icon: Phone },
   ];
-
-  const cartItemCount = 2;
 
   // Close dropdowns when clicking outside
   useEffect(() => {
@@ -62,6 +83,22 @@ const Navbar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    const initializeAuth = async () => {
+      const storedUser = localStorage.getItem("userInfo");
+      if (storedUser && !user) {
+        try {
+          await dispatch(getProfileInformation()).unwrap();
+        } catch (error) {
+          localStorage.removeItem("userInfo");
+          dispatch(resetAuthState());
+        }
+      }
+    };
+
+    initializeAuth();
+  }, [dispatch, user]);
+
   const handleLogout = () => {
     dispatch(logoutUser());
     setIsProfileDropdownOpen(false);
@@ -71,7 +108,9 @@ const Navbar = () => {
     e.preventDefault();
     if (searchQuery.trim()) {
       console.log("Searching for:", searchQuery);
-      // Implement search logic here
+      dispatch(setFilters({ search: searchQuery }));
+      dispatch(fetchProductsByFilters({ search: searchQuery }));
+      navigate(`/collections/all?search=${searchQuery}`);
       setSearchQuery("");
       setIsSearchOpen(false);
     }
@@ -86,7 +125,6 @@ const Navbar = () => {
       <nav className="bg-white/95 backdrop-blur-md border-b border-amber-200/50 sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            {/* Logo */}
             <Link to="/" className="flex items-center space-x-2 group">
               <Smartphone className="w-8 h-8 text-amber-800 group-hover:text-amber-900 transition-colors duration-200" />
               <span className="text-xl font-bold text-slate-900 group-hover:text-amber-800 transition-colors duration-200">
@@ -162,7 +200,7 @@ const Navbar = () => {
                 className="relative p-2 text-slate-700 hover:text-amber-800 hover:bg-amber-50 rounded-lg transition-all duration-200"
               >
                 <ShoppingCart className="w-5 h-5" />
-                {cartItemCount > 0 && (
+                {cartItemCount > 0 && user && (
                   <span className="absolute -top-1 -right-1 bg-amber-800 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">
                     {cartItemCount > 99 ? "99+" : cartItemCount}
                   </span>
@@ -218,14 +256,6 @@ const Navbar = () => {
                       </p>
                       <p className="text-xs text-slate-500">{user?.email}</p>
                     </div>
-                    <Link
-                      to="/profile"
-                      className="flex items-center space-x-2 px-4 py-2 text-sm text-slate-700 hover:bg-amber-50 transition-colors duration-200"
-                      onClick={() => setIsProfileDropdownOpen(false)}
-                    >
-                      <User className="w-4 h-4" />
-                      <span>Profile</span>
-                    </Link>
                     <button
                       onClick={handleLogout}
                       className="flex items-center space-x-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors duration-200"

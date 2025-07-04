@@ -78,14 +78,6 @@ const Hero = () => {
           <p className="text-xl md:text-2xl mb-8 text-amber-100 animate-fade-in">
             {currentImage.subtitle}
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 animate-fade-in">
-            <button className="bg-amber-600 hover:bg-amber-700 text-white px-8 py-3 text-lg">
-              Shop Now
-            </button>
-            <button className="border-white text-white hover:bg-white hover:text-amber-800 px-8 py-3 text-lg">
-              Learn More
-            </button>
-          </div>
         </div>
       </div>
 

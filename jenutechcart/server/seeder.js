@@ -2,8 +2,9 @@ const mongoose=require("mongoose")
 const dotenv=require("dotenv")
 const ProductModel=require("./models/product.model")
 const UserModel=require("./models/user.model")
-const products=require("./data/product")
+
 const CartModel=require("./models/cart.model")
+const {products} = require("./data/product")
 
 
 dotenv.config()

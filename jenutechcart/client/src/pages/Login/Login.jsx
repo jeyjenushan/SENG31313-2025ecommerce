@@ -1,8 +1,9 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Mail, Lock, ArrowLeft, Smartphone } from "lucide-react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../redux/slices/auth.slice";
+import { toast } from "sonner";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -11,11 +12,45 @@ const Login = () => {
     password: "",
   });
   const dispatch = useDispatch();
+  const { user, isAuthenticated } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    if (user && isAuthenticated) {
+      navigate("/");
+    }
+  }, [user, isAuthenticated, navigate]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!formData.email.trim() || !formData.password.trim()) {
+      toast.error("Fields are required!", {
+        description: "Please enter your fields.",
+        duration: 4000,
+      });
+      return;
+    }
+
     console.log("Login Data", formData);
-    dispatch(loginUser(formData));
+
+    try {
+      const resultAction = await dispatch(loginUser(formData));
+      if (loginUser.fulfilled.match(resultAction)) {
+        navigate("/");
+      } else if (loginUser.rejected.match(resultAction)) {
+        const error = resultAction.payload || resultAction.error;
+        toast.error("Login failed", {
+          description: error.message || "Invalid email or password",
+          duration: 4000,
+        });
+      }
+    } catch (error) {
+      toast.error("Login failed", {
+        description: "An unexpected error occurred",
+        duration: 4000,
+      });
+    }
   };
 
   const handleChange = (e) => {

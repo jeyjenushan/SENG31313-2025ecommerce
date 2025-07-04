@@ -1,48 +1,55 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { X, Plus, Minus, Trash2, ShoppingBag } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  clearCart,
+  removeFromCart,
+  updateCartItemQuantity,
+} from "../../redux/slices/cart.slice";
 
 const CartSidebar = ({ isOpen, onClose }) => {
-  // Dummy cart data - replace with your actual state management later
-  const [items, setItems] = useState([
-    {
-      id: "1",
-      name: "Smart Coffee Table",
-      price: 899,
-      image:
-        "https://images.pexels.com/photos/1866149/pexels-photo-1866149.jpeg?auto=compress&cs=tinysrgb&w=400",
-      quantity: 1,
-    },
-    {
-      id: "2",
-      name: "Smart Fan Controller",
-      price: 299,
-      image:
-        "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=400",
-      quantity: 2,
-    },
-  ]);
+  const { cart } = useSelector((state) => state.cart);
+  const items = cart?.products || [];
+  const dispatch = useDispatch();
 
-  // Calculate total from items
-  const total = 3000;
+  const total = items.reduce(
+    (acc, item) => acc + item.price * item.quantity,
+    0
+  );
 
-  const handleQuantityChange = (id, newQuantity) => {
+  const handleQuantityChange = (item, newQuantity) => {
     if (newQuantity <= 0) {
-      handleRemoveItem(id);
+      dispatch(
+        removeFromCart({
+          productId: item.productId,
+          category: item.category,
+          color: item.color,
+        })
+      );
     } else {
-      setItems((prevItems) =>
-        prevItems.map((item) =>
-          item.id === id ? { ...item, quantity: newQuantity } : item
-        )
+      dispatch(
+        updateCartItemQuantity({
+          productId: item.productId,
+          quantity: newQuantity,
+          category: item.category,
+          color: item.color,
+        })
       );
     }
   };
 
-  const handleRemoveItem = (id) => {
-    setItems((prevItems) => prevItems.filter((item) => item.id !== id));
+  const handleRemoveItem = (item) => {
+    dispatch(
+      removeFromCart({
+        productId: item.productId,
+        category: item.category,
+        color: item.color,
+      })
+    );
   };
 
   const handleClearCart = () => {
-    setItems([]);
+    dispatch(clearCart());
   };
 
   return (
@@ -119,7 +126,7 @@ const CartSidebar = ({ isOpen, onClose }) => {
                     <div className="flex items-center space-x-2">
                       <button
                         onClick={() =>
-                          handleQuantityChange(item.id, item.quantity - 1)
+                          handleQuantityChange(item, item.quantity - 1)
                         }
                         className="p-1 text-slate-500 hover:text-amber-800 hover:bg-amber-100 rounded transition-all duration-200"
                       >
@@ -130,14 +137,14 @@ const CartSidebar = ({ isOpen, onClose }) => {
                       </span>
                       <button
                         onClick={() =>
-                          handleQuantityChange(item.id, item.quantity + 1)
+                          handleQuantityChange(item, item.quantity + 1)
                         }
                         className="p-1 text-slate-500 hover:text-amber-800 hover:bg-amber-100 rounded transition-all duration-200"
                       >
                         <Plus className="w-4 h-4" />
                       </button>
                       <button
-                        onClick={() => handleRemoveItem(item.id)}
+                        onClick={() => handleRemoveItem(item)}
                         className="p-1 text-red-500 hover:text-red-700 hover:bg-red-100 rounded transition-all duration-200 ml-2"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -162,9 +169,6 @@ const CartSidebar = ({ isOpen, onClose }) => {
               </div>
 
               <div className="space-y-2">
-                <button className="w-full bg-amber-800 text-white py-3 rounded-lg hover:bg-amber-900 transition-colors duration-200 font-medium">
-                  Proceed to Checkout
-                </button>
                 <button
                   onClick={handleClearCart}
                   className="w-full border border-slate-300 text-slate-700 py-2 rounded-lg hover:bg-slate-50 transition-colors duration-200"

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin, Clock, Send } from "lucide-react";
 
@@ -28,25 +28,6 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen bg-amber-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b border-amber-200">
-        <div className="max-w-7xl mx-auto px-4 py-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-amber-900">Contact Us</h1>
-              <p className="text-amber-700 mt-2">
-                We're here to help with all your smart home needs
-              </p>
-            </div>
-            <Link to="/">
-              <button className="border border-amber-300 text-amber-700 hover:bg-amber-100 px-4 py-2 rounded-md transition-colors">
-                Back to Home
-              </button>
-            </Link>
-          </div>
-        </div>
-      </header>
-
       <div className="max-w-7xl mx-auto px-4 py-12">
         <div className="grid lg:grid-cols-2 gap-12">
           {/* Contact Information */}

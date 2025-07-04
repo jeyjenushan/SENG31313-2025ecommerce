@@ -34,7 +34,7 @@ export const fetchProductsByFilters=createAsyncThunk("products/fetchByFilters",a
 export const fetchProductDetails=createAsyncThunk("products/fetchProductDetails",async(id)=>{
       const {data}=await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products/${id}`)
 
-    console.log(data)
+    console.log("data",data)
 
     return data;
 
@@ -57,15 +57,26 @@ export const fetchSimilarProducts=createAsyncThunk("products/fetchSimilarProduct
 
 
 //Async Thunk to arrivalProducts
-export const fetchArrivalProducts=createAsyncThunk("products/fetchArrivalProducts",async({id})=>{
-      const {data}=await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products/new-arrivals`)
-
-    console.log(data)
-
-    return data;
-
-
-})
+export const fetchArrivalProducts = createAsyncThunk(
+  "products/fetchArrivalProducts",
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products/new-arrivals`);
+      console.log("API Response:", data);
+      
+      if (!data) {
+        return rejectWithValue({ message: 'No data received' });
+      }
+      
+      return data;
+    } catch (error) {
+      console.error("Error fetching arrival products:", error);
+      return rejectWithValue({ 
+        message: error.response?.data?.message || error.message 
+      });
+    }
+  }
+);
 
 //Async Thunk to bestSellerProducts
 export const fetchBestSellerProduct=createAsyncThunk("products/fetchBestSellerProducts",async({id})=>{
@@ -190,7 +201,7 @@ const productSlice=createSlice({
         })
         .addCase(fetchArrivalProducts.fulfilled,(state,action)=>{
             state.loading=false;
-            state.arrivalsProducts=action.payload
+            state.arrivalsProducts=Array.isArray(action.payload)?action.payload:[];
         })
         .addCase(fetchArrivalProducts.rejected,(state,action)=>{
             state.loading=false;

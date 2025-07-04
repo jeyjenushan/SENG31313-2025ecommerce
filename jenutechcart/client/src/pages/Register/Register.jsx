@@ -33,7 +33,6 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validation checks with toast notifications
     if (formData.password !== formData.confirmPassword) {
       toast.error("Passwords do not match!", {
         description: "Please make sure both passwords are identical.",
@@ -66,30 +65,30 @@ const Register = () => {
       description: "Please wait while we set up your SmartHome account.",
     });
 
-    console.log("Registration Data", formData);
-
     try {
-      // Simulate API call delay
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      const resultAction = await dispatch(registerUser(formData));
 
-      dispatch(registerUser(formData));
-
-      // Dismiss loading toast and show success
-      toast.dismiss(loadingToastId);
-      toast.success("Account created successfully! 🎉", {
-        description: "Welcome to SmartHome! You can now start shopping.",
-        duration: 5000,
-      });
-
-      // Reset form
-      setFormData({
-        name: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-        image: "",
-      });
-      setimage(null);
+      if (registerUser.fulfilled.match(resultAction)) {
+        toast.dismiss(loadingToastId);
+        toast.success("Account created successfully! 🎉", {
+          description: "Welcome to SmartHome! You can now start shopping.",
+          duration: 5000,
+        });
+        // Reset form
+        setFormData({
+          name: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+          image: "",
+        });
+        setimage(null);
+      } else {
+        toast.error("Registration failed!", {
+          description: "Something went wrong. Please try again.",
+          duration: 4000,
+        });
+      }
     } catch (error) {
       // Dismiss loading toast and show error
       toast.dismiss(loadingToastId);
@@ -98,7 +97,6 @@ const Register = () => {
         duration: 4000,
       });
     } finally {
-      // Stop loading
       setIsLoading(false);
     }
   };

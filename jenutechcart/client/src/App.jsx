@@ -24,7 +24,7 @@ const App = () => {
             <Route path="contact" element={<Contact />} />
             <Route path="product/:id" element={<ProductDetails />} />
             <Route
-              path="collections/:collection"
+              path="collections/:collections"
               element={<CollectionPage />}
             />
           </Route>

@@ -4,10 +4,10 @@ import { IoClose } from "react-icons/io5";
 
 import { useParams, useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-//import { fetchProductsByFilters } from "../../redux/store/product.slice";
 import FilterSideBar from "../../components/Products/FilterSidebar";
 import ProductGrid from "../../components/Products/ProductGrid";
 import SortOptions from "../../components/Products/SortOptions";
+import { fetchProductsByFilters } from "../../redux/slices/product.slice";
 
 const CollectionPage = () => {
   const { collections } = useParams();
@@ -17,11 +17,11 @@ const CollectionPage = () => {
   const queryParams = Object.fromEntries(searchParams.entries());
   const sidebarRef = useRef(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  /*
+
   useEffect(() => {
     dispatch(fetchProductsByFilters({ collections, ...queryParams }));
   }, [dispatch, collections, searchParams]);
-*/
+
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
@@ -32,12 +32,30 @@ const CollectionPage = () => {
     }
   };
 
+  const handleBackdropClick = () => {
+    setIsSidebarOpen(false);
+  };
+
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  // Prevent body scroll when sidebar is open on mobile
+  useEffect(() => {
+    if (isSidebarOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isSidebarOpen]);
 
   return (
     <div className="min-h-screen bg-neutral-50">
@@ -57,13 +75,21 @@ const CollectionPage = () => {
           <div className="lg:hidden flex justify-between items-center mb-4">
             <button
               onClick={toggleSidebar}
-              className="flex items-center gap-2 px-4 py-2 bg-brown-700 text-white rounded-lg hover:bg-brown-800 transition-colors"
+              className="lg:hidden border border-gray-300 p-2 flex justify-center items-center rounded-lg hover:bg-gray-50 transition-colors duration-200"
             >
-              <FaFilter />
+              <FaFilter className="mr-2" />
               <span>Filters</span>
             </button>
             <SortOptions />
           </div>
+
+          {/* Backdrop overlay for mobile */}
+          {isSidebarOpen && (
+            <div
+              className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40 lg:hidden"
+              onClick={handleBackdropClick}
+            />
+          )}
 
           {/* Filter sidebar */}
           <div
@@ -71,19 +97,13 @@ const CollectionPage = () => {
             className={`${
               isSidebarOpen ? "translate-x-0" : "-translate-x-full"
             } 
-            fixed inset-y-0 z-50 left-0 w-72 bg-white shadow-xl overflow-y-auto
-            transition-transform duration-300 lg:static lg:translate-x-0 lg:w-1/4
+            fixed inset-y-0 z-50 left-0 w-72 shadow-xl overflow-y-auto
+            transition-transform duration-300 ease-in-out lg:translate-x-0 lg:sticky lg:top-20 lg:h-[calc(100vh-4rem)] lg:overflow-y-auto lg:shadow-none bg-gray-50
             `}
           >
             <div className="p-4">
               <div className="flex justify-between items-center mb-6">
-                <h3 className="text-xl font-bold text-brown-800">Filters</h3>
-                <button
-                  onClick={toggleSidebar}
-                  className="lg:hidden text-brown-700 hover:text-brown-900"
-                >
-                  <IoClose size={24} />
-                </button>
+                <h3 className="text-xl font-bold text-amber-800">Filters</h3>
               </div>
               <FilterSideBar />
             </div>
@@ -91,13 +111,25 @@ const CollectionPage = () => {
 
           {/* Main content */}
           <div className="flex-grow lg:w-3/4">
-            {/* Desktop Sort Options */}
             <div className="hidden lg:block mb-6">
               <SortOptions />
             </div>
 
             {/* Product Grid */}
-            <ProductGrid products={products} loading={loading} error={error} />
+            {products.length > 0 ? (
+              <ProductGrid
+                products={products}
+                loading={loading}
+                error={error}
+              />
+            ) : (
+              <h3
+                className="text-brown-700 hover:text-brown-900 fixed top-1/2 right-0 transform -translate-y-1/2 w-3/4  pr-10 text-xl font-semibold text-center p4"
+                style={{ backgroundColor: "#fdf5e6" }}
+              >
+                No Products available in this condition
+              </h3>
+            )}
           </div>
         </div>
       </div>
