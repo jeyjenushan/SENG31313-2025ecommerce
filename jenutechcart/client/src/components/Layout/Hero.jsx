@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Hero = () => {
   const heroImages = [
@@ -31,6 +32,7 @@ const Hero = () => {
   ];
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const navigate = useNavigate();
 
   // Auto-rotate images every 4 seconds
   useEffect(() => {
@@ -78,6 +80,13 @@ const Hero = () => {
           <p className="text-xl md:text-2xl mb-8 text-amber-100 animate-fade-in">
             {currentImage.subtitle}
           </p>
+          {/* Shop Now Button */}
+          <button
+            onClick={() => navigate("/collections/all")}
+            className="bg-amber-600 hover:bg-amber-700 text-white font-semibold py-3 px-8 rounded-lg shadow-lg transition-all duration-200 transform hover:scale-105"
+          >
+            Shop Now
+          </button>
         </div>
       </div>
 

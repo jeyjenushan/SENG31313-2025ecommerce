@@ -62,14 +62,9 @@ const ProductDetails = () => {
           toast.success(`${selectedProduct.name} added to cart!`, {
             duration: 1000,
           });
-        } else {
-          // Handle any backend validation errors
-          toast.error(response.message);
         }
       })
-      .catch((error) => {
-        toast.error(error.message);
-      })
+
       .finally(() => {
         setIsButtonDisabled(false);
       });

@@ -41,14 +41,12 @@ const Navbar = () => {
 
   //USE SELECTOR USING
   const { cart } = useSelector((state) => state.cart);
-  const { user, isAuthenticated, isInitialized } = useSelector(
-    (state) => state.auth
-  );
+  const { user, isAuthenticated } = useSelector((state) => state.auth);
 
-  // Replace your current initialization useEffect with this:
+  const currentUser = user || JSON.parse(localStorage.getItem("userInfo"));
   useEffect(() => {
-    const storedUser = localStorage.getItem("userInfo");
-    if (storedUser && !user) {
+    console.log(currentUser);
+    if (currentUser && !user) {
       dispatch(getProfileInformation());
     }
   }, [dispatch, user]);
@@ -82,22 +80,6 @@ const Navbar = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-  useEffect(() => {
-    const initializeAuth = async () => {
-      const storedUser = localStorage.getItem("userInfo");
-      if (storedUser && !user) {
-        try {
-          await dispatch(getProfileInformation()).unwrap();
-        } catch (error) {
-          localStorage.removeItem("userInfo");
-          dispatch(resetAuthState());
-        }
-      }
-    };
-
-    initializeAuth();
-  }, [dispatch, user]);
 
   const handleLogout = () => {
     dispatch(logoutUser());
@@ -200,7 +182,7 @@ const Navbar = () => {
                 className="relative p-2 text-slate-700 hover:text-amber-800 hover:bg-amber-50 rounded-lg transition-all duration-200"
               >
                 <ShoppingCart className="w-5 h-5" />
-                {cartItemCount > 0 && user && (
+                {cartItemCount > 0 && currentUser && (
                   <span className="absolute -top-1 -right-1 bg-amber-800 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">
                     {cartItemCount > 99 ? "99+" : cartItemCount}
                   </span>
@@ -209,17 +191,17 @@ const Navbar = () => {
 
               {/* Profile / Auth */}
               <div ref={profileDropdownRef} className="relative">
-                {isAuthenticated && user ? (
+                {currentUser ? (
                   <button
                     onClick={() =>
                       setIsProfileDropdownOpen(!isProfileDropdownOpen)
                     }
                     className="flex items-center space-x-2 p-1 rounded-lg hover:bg-amber-50 transition-all duration-200"
                   >
-                    {user.image ? (
+                    {currentUser.image ? (
                       <img
-                        src={user.image}
-                        alt={user.name}
+                        src={currentUser.image}
+                        alt={currentUser.name}
                         className="w-8 h-8 rounded-full object-cover border-2 border-amber-200"
                       />
                     ) : (
@@ -248,13 +230,15 @@ const Navbar = () => {
                 )}
 
                 {/* Profile Dropdown */}
-                {isAuthenticated && isProfileDropdownOpen && (
+                {currentUser && isProfileDropdownOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-amber-200/50 py-2 z-50">
                     <div className="px-4 py-2 border-b border-amber-100">
                       <p className="text-sm font-medium text-slate-900">
-                        {user?.name}
+                        {currentUser?.name}
                       </p>
-                      <p className="text-xs text-slate-500">{user?.email}</p>
+                      <p className="text-xs text-slate-500">
+                        {currentUser?.email}
+                      </p>
                     </div>
                     <button
                       onClick={handleLogout}

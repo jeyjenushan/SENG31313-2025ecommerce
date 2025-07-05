@@ -1,11 +1,45 @@
-import React from "react";
+import React, { useState } from "react";
 import { IoLogoInstagram } from "react-icons/io";
 import { RiTwitterXLine } from "react-icons/ri";
 import { TbBrandMeta } from "react-icons/tb";
 import { FiPhoneCall } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addSubscriber } from "../../redux/slices/subscriber.slice";
+import { toast } from "sonner";
 
 const Footer = () => {
+  const [email, setEmail] = useState("");
+  const dispatch = useDispatch();
+
+  const handleAddSubscribe = async (e) => {
+    e.preventDefault();
+
+    if (!email) {
+      toast.error("Please enter your email address");
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
+    try {
+      const resultAction = await dispatch(addSubscriber(email));
+
+      if (addSubscriber.fulfilled.match(resultAction)) {
+        toast.success("Thank you for subscribing!");
+        setEmail("");
+      } else if (addSubscriber.rejected.match(resultAction)) {
+        const error = resultAction.payload || resultAction.error;
+        toast.error(error.message || "Subscription failed");
+      }
+    } catch (error) {
+      toast.error("An unexpected error occurred");
+    }
+  };
+
   return (
     <footer className="border-t-2 border-amber-300 bg-gradient-to-b from-amber-50 to-amber-100 py-12 shadow-lg">
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 px-4 lg:px-0">
@@ -20,10 +54,12 @@ const Footer = () => {
             Sign up and get 10% off your first order.
           </p>
 
-          <form className="flex">
+          <form className="flex" onSubmit={handleAddSubscribe}>
             <input
               type="email"
               placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="p-3 w-full text-sm border-2 border-amber-200 rounded-l-md 
               focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent
               transition-all bg-white"
@@ -45,7 +81,7 @@ const Footer = () => {
           <ul className="space-y-3 text-amber-700">
             <li>
               <Link
-                to="#"
+                to={`/collections/all?category=furnitue`}
                 className="hover:text-amber-600 transition-colors flex items-center"
               >
                 <span className="w-2 h-2 bg-amber-400 rounded-full mr-2"></span>
@@ -54,7 +90,7 @@ const Footer = () => {
             </li>
             <li>
               <Link
-                to="#"
+                to={`/collections/all?category=cookware`}
                 className="hover:text-amber-600 transition-colors flex items-center"
               >
                 <span className="w-2 h-2 bg-amber-400 rounded-full mr-2"></span>
@@ -63,7 +99,7 @@ const Footer = () => {
             </li>
             <li>
               <Link
-                to="#"
+                to={`/collections/all?category=smartHome`}
                 className="hover:text-amber-600 transition-colors flex items-center"
               >
                 <span className="w-2 h-2 bg-amber-400 rounded-full mr-2"></span>
@@ -72,7 +108,7 @@ const Footer = () => {
             </li>
             <li>
               <Link
-                to="#"
+                to={`/collections/all?category=cleaning`}
                 className="hover:text-amber-600 transition-colors flex items-center"
               >
                 <span className="w-2 h-2 bg-amber-400 rounded-full mr-2"></span>

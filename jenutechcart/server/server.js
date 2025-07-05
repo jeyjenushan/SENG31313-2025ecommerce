@@ -4,6 +4,7 @@ const dotenv=require("dotenv")
 const connectToDB=require("./db/connectToMongoDb")
 const authRoutes=require("./routes/auth.routes")
 const productRoutes=require("./routes/product.routes")
+const subscriberRoutes=require("./routes/subscriber.routes")
 const cartRoutes=require("./routes/cart.routes")
 const cookieParser = require("cookie-parser")
 
@@ -25,6 +26,7 @@ app.use(cookieParser())
 app.use("/api/auth",authRoutes)
 app.use("/api/products",productRoutes)
 app.use("/api/cart",cartRoutes)
+app.use("/api/subscriber",subscriberRoutes)
 
 
 
