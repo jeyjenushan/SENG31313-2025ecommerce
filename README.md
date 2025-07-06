@@ -19,80 +19,80 @@
 ## Project Structure 📂
 
 jenutcart/
-├── client/ # React Frontend
-│ ├── src/
-│ │ ├── Pages/
-│ │ │ ├── About.jsx
-│ │ │ ├── Collections.jsx
-│ │ │ ├── Contact.jsx
-│ │ │ ├── Home.jsx
-│ │ │ ├── Login.jsx
-│ │ │ └── Register.jsx
-│ │ │
-│ │ ├── Components/
-│ │ │ ├── Cart/
-│ │ │ │ └── CartSidebar.jsx
-│ │ │ ├── Common/
-│ │ │ │ ├── Footer.jsx
-│ │ │ │ ├── Navbar.jsx
-│ │ │ │ ├── SearchBar.jsx
-│ │ │ │ └── SortOptions.jsx
-│ │ │ ├── Layout/
-│ │ │ │ ├── Categories.jsx
-│ │ │ │ ├── Hero.jsx
-│ │ │ │ ├── ProductCarousel.jsx
-│ │ │ │ └── UserLayout.jsx
-│ │ │ └── Products/
-│ │ │ ├── FilterSidebar.jsx
-│ │ │ ├── ProductDetails.jsx
-│ │ │ ├── ProductGrid.jsx
-│ │ │ └── SortOptions.jsx
-│ │ │
-│ │ ├── redux/
-│ │ │ ├── slices/
-│ │ │ │ ├── auth.slice.js
-│ │ │ │ ├── cart.slice.js
-│ │ │ │ └── product.slice.js
-│ │ │ └── store.js
-│ │ │
-│ │ ├── App.jsx
-│ │ └── Main.jsx
-│ │
-│ └── .env
+├── client/                      # React Frontend
+│   ├── src/
+│   │   ├── Pages/
+│   │   │   ├── About.jsx
+│   │   │   ├── Collections.jsx
+│   │   │   ├── Contact.jsx
+│   │   │   ├── Home.jsx
+│   │   │   ├── Login.jsx
+│   │   │   └── Register.jsx
+│   │   │
+│   │   ├── Components/
+│   │   │   ├── Cart/
+│   │   │   │   └── CartSidebar.jsx
+│   │   │   ├── Common/
+│   │   │   │   ├── Footer.jsx
+│   │   │   │   ├── Navbar.jsx
+│   │   │   │   ├── SearchBar.jsx
+│   │   │   │   └── SortOptions.jsx
+│   │   │   ├── Layout/
+│   │   │   │   ├── Categories.jsx
+│   │   │   │   ├── Hero.jsx
+│   │   │   │   ├── ProductCarousel.jsx
+│   │   │   │   └── UserLayout.jsx
+│   │   │   └── Products/
+│   │   │       ├── FilterSidebar.jsx
+│   │   │       ├── ProductDetails.jsx
+│   │   │       ├── ProductGrid.jsx
+│   │   │       └── SortOptions.jsx
+│   │   │
+│   │   ├── redux/
+│   │   │   ├── slices/
+│   │   │   │   ├── auth.slice.js
+│   │   │   │   ├── cart.slice.js
+│   │   │   │   └── product.slice.js
+│   │   │   └── store.js
+│   │   │
+│   │   ├── App.jsx
+│   │   └── Main.jsx
+│   │
+│   └── .env
 │
-└── server/ # Node.js Backend
-├── Controllers/
-│ ├── auth.controller.js
-│ ├── cart.controller.js
-│ └── product.controller.js
-│
-├── data/
-│ └── product.js
-│
-├── db/
-│ └── connectToMongoDb.js
-│
-├── middleware/
-│ ├── authMiddleware.js
-│ └── multer.js
-│
-├── models/
-│ ├── cart.model.js
-│ ├── product.model.js
-│ └── user.model.js
-│
-├── routes/
-│ ├── auth.routes.js
-│ ├── cart.routes.js
-│ └── product.routes.js
-│
-├── utils/
-│ ├── cloudinary.js
-│ └── generateToken.js
-│
-├── .env
-├── seeder.js
-└── server.js
+└── server/                      # Node.js Backend
+    ├── Controllers/
+    │   ├── auth.controller.js
+    │   ├── cart.controller.js
+    │   └── product.controller.js
+    │
+    ├── data/
+    │   └── product.js
+    │
+    ├── db/
+    │   └── connectToMongoDb.js
+    │
+    ├── middleware/
+    │   ├── authMiddleware.js
+    │   └── multer.js
+    │
+    ├── models/
+    │   ├── cart.model.js
+    │   ├── product.model.js
+    │   └── user.model.js
+    │
+    ├── routes/
+    │   ├── auth.routes.js
+    │   ├── cart.routes.js
+    │   └── product.routes.js
+    │
+    ├── utils/
+    │   ├── cloudinary.js
+    │   └── generateToken.js
+    │
+    ├── .env
+    ├── seeder.js
+    └── server.js
 
 ## Features ✨
 
