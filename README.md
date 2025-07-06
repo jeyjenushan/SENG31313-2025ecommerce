@@ -1,4 +1,4 @@
-# JenutCart - E-Commerce Platform 🛒
+# jenutechcart - E-Commerce Platform 🛒
 
 [![Demo Video](https://img.shields.io/badge/Watch-Demo-red)](https://drive.google.com/file/d/1Es9uqzIdrb4cecjOM3b-dRJZZLDaD0GZ/view?usp=sharing)
 
@@ -19,7 +19,7 @@
 ## Project Structure 📂
 
 ```
-jenutcart/
+jenutechcart/
 ├── client/                                    # React Frontend
 │   ├── src/
 │   │   ├── Pages/
@@ -181,6 +181,13 @@ _Detailed product view with image gallery_
 - Node.js (v14+) 🟢
 - MongoDB Atlas account 🗄️
 - Cloudinary account ☁️
+
+### Clone the repository and setup directory
+
+```bash
+git clone https://github.com/jeyjenushan/SENG31313-2025ecommerce.git
+cd SENG31313-2025ecommerce/jenutechcart
+```
 
 ### Backend Setup
 
