@@ -153,20 +153,20 @@ _All products view with filtering options_
 
 ### Shopping Cart
 
-![Cart Page](./Readmefolder/Cart.png)
+![Cart Page](/Readmefolder/Cart.png)
 _User's cart with items and checkout button_
 
 ### Authentication
 
-![Login Page](./Readmefolder/Login.png)
+![Login Page](/Readmefolder/Login.png)
 _User login form_
 
-![Register Page](./Readmefolder/Register.png)
+![Register Page](/Readmefolder/Register.png)
 _User registration form_
 
 ### Product Details
 
-![Product Details](./Readmefolder/ProductDetails.png)
+![Product Details](/Readmefolder/ProductDetails.png)
 _Detailed product view with image gallery_
 
 ## Setup Instructions 🛠️
