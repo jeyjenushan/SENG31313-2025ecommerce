@@ -44,6 +44,7 @@ const ProductDetails = () => {
   const handleAddToCart = () => {
     if (!user) {
       navigate("/login");
+      return;
     }
 
     setIsButtonDisabled(true);
@@ -63,6 +64,9 @@ const ProductDetails = () => {
             duration: 1000,
           });
         }
+      })
+      .catch((error) => {
+        toast.error("Failed to add item to cart");
       })
 
       .finally(() => {

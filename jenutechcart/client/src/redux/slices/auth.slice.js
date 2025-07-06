@@ -150,6 +150,8 @@ const authSlice=createSlice({
             state.loading=false;
             state.user=null,
             state.isAuthenticated=false
+            localStorage.removeItem("cart")
+            localStorage.removeItem("userInfo")
           })
         .addCase(getProfileInformation.fulfilled,(state,action)=>{
             state.loading=false;

@@ -243,6 +243,46 @@ const loggedUserCart=async(req,res)=>{
 }
 
 
+const deleteAllItems = async (req, res) => {
+    const token = req.cookies.jwt;
+    const userId = token ? jwt.verify(token, process.env.JWT_SECRET).user.id : null;
+    
+    try {
+        // Get the user's cart
+        let cart = await getCart(userId);
+        if (!cart) return res.status(404).json({ message: "Cart not found" });
+
+
+        const cartItems = cart.products;
+        
+        await Cart.updateOne(
+            { _id: cart._id },
+            { 
+                $set: { 
+                    products: [],
+                    totalPrice: 0 
+                } 
+            }
+        );
+
+        for (const item of cartItems) {
+            await Product.updateOne(
+                { _id: item.productId }, 
+                { $inc: { countInStock: item.quantity } }
+            );
+        }
+
+        return res.status(200).json({ 
+            message: "All items removed from cart successfully",
+            updatedProducts: cartItems.length
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: error.message });
+    }
+};
+
 
 
 
@@ -258,5 +298,6 @@ module.exports={
     createCart,
     loggedUserCart,
     deleteCart,
-    updateCart
+    updateCart,
+    deleteAllItems
 }

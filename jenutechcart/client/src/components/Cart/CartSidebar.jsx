@@ -2,6 +2,7 @@ import { X, Plus, Minus, Trash2, ShoppingBag } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   clearCart,
+  removeAllItems,
   removeFromCart,
   updateCartItemQuantity,
 } from "../../redux/slices/cart.slice";
@@ -48,7 +49,7 @@ const CartSidebar = ({ isOpen, onClose }) => {
   };
 
   const handleClearCart = () => {
-    dispatch(clearCart());
+    dispatch(removeAllItems());
   };
 
   return (
