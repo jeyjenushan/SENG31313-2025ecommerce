@@ -143,7 +143,7 @@ jenutcart/
 
 ### Home Page
 
-![Home Page](.jenutechcart/Readmefolder/Home.png)
+![Home Page](/jenutechcart/Readmefolder/Home.png)
 _Landing page with featured products and categories_
 
 ### Product Listing
@@ -153,15 +153,15 @@ _All products view with filtering options_
 
 ### Shopping Cart
 
-![Cart Page](/Readmefolder/Cart.png)
+![Cart Page](/jenutechcart/Readmefolder/Cart.png)
 _User's cart with items and checkout button_
 
 ### Authentication
 
-![Login Page](/Readmefolder/Login.png)
+![Login Page](/jenutechcart/Readmefolder/Login.png)
 _User login form_
 
-![Register Page](/Readmefolder/Register.png)
+![Register Page](/jenutechcart/Readmefolder/Register.png)
 _User registration form_
 
 ### Product Details
