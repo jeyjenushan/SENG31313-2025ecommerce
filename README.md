@@ -17,8 +17,10 @@
 | Styling          | Tailwind CSS     |
 
 ## Project Structure 📂
+
+```
 jenutcart/
-├── client/                   # React Frontend
+├── client/                                    # React Frontend
 │   ├── src/
 │   │   ├── Pages/
 │   │   │   ├── About.jsx
@@ -31,16 +33,19 @@ jenutcart/
 │   │   ├── Components/
 │   │   │   ├── Cart/
 │   │   │   │   └── CartSidebar.jsx
+│   │   │   │
 │   │   │   ├── Common/
 │   │   │   │   ├── Footer.jsx
 │   │   │   │   ├── Navbar.jsx
 │   │   │   │   ├── SearchBar.jsx
 │   │   │   │   └── SortOptions.jsx
+│   │   │   │
 │   │   │   ├── Layout/
 │   │   │   │   ├── Categories.jsx
 │   │   │   │   ├── Hero.jsx
 │   │   │   │   ├── ProductCarousel.jsx
 │   │   │   │   └── UserLayout.jsx
+│   │   │   │
 │   │   │   └── Products/
 │   │   │       ├── FilterSidebar.jsx
 │   │   │       ├── ProductDetails.jsx
@@ -59,7 +64,7 @@ jenutcart/
 │   │
 │   └── .env
 │
-└── server/                   # Node.js Backend
+└── server/                                    # Node.js Backend
     ├── Controllers/
     │   ├── auth.controller.js
     │   ├── cart.controller.js
@@ -92,6 +97,7 @@ jenutcart/
     ├── .env
     ├── seeder.js
     └── server.js
+```
 
 ## Features ✨
 
@@ -178,42 +184,54 @@ _Detailed product view with image gallery_
 
 ### Backend Setup
 
-- cd Server
-
-  npm install
+```bash
+cd server
+npm install
+```
 
 #### Create .env file with these variables:
 
-- PORT=5000
-- MONGO_URI=your_mongodb_atlas_connection_string
-- JWT_SECRET=your_jwt_secret_key
-- CLOUDINARY_CLOUD_NAME=your_cloudinary_name
-- CLOUDINARY_API_KEY=your_cloudinary_key
-- CLOUDINARY_API_SECRET=your_cloudinary_secret
+```env
+PORT=5000
+MONGO_URI=your_mongodb_atlas_connection_string
+JWT_SECRET=your_jwt_secret_key
+CLOUDINARY_CLOUD_NAME=your_cloudinary_name
+CLOUDINARY_API_KEY=your_cloudinary_key
+CLOUDINARY_API_SECRET=your_cloudinary_secret
+```
 
-#### run the seeder
+#### Run the seeder
 
-- npm run seed
+```bash
+npm run seed
+```
 
-##### start the server
+#### Start the server
 
-- npm start
+```bash
+npm start
+```
 
 ### Frontend Setup
 
-- cd Server
-
-  npm install
+```bash
+cd client
+npm install
+```
 
 #### Create .env file with these variables:
 
-- REACT_APP_API_URL=http://localhost:5000
+```env
+REACT_APP_API_URL=http://localhost:5000
+```
 
-##### start the server
+#### Start the development server
 
-- npm run dev
+```bash
+npm run dev
+```
 
-##### Running the Application 🚀
+## Running the Application 🚀
 
 - Start both server and client in separate terminals
 - Access frontend at: http://localhost:5173
