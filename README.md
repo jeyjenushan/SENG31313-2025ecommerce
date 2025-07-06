@@ -2,7 +2,7 @@
 
 [![Demo Video](https://img.shields.io/badge/Watch-Demo-red)](https://drive.google.com/file/d/1Es9uqzIdrb4cecjOM3b-dRJZZLDaD0GZ/view?usp=sharing)
 
-## Screen shots
+
 
 ## Tech Stack ⚙️
 
