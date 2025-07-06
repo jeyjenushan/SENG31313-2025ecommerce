@@ -17,9 +17,8 @@
 | Styling          | Tailwind CSS     |
 
 ## Project Structure 📂
-
 jenutcart/
-├── client/                      # React Frontend
+├── client/                   # React Frontend
 │   ├── src/
 │   │   ├── Pages/
 │   │   │   ├── About.jsx
@@ -60,7 +59,7 @@ jenutcart/
 │   │
 │   └── .env
 │
-└── server/                      # Node.js Backend
+└── server/                   # Node.js Backend
     ├── Controllers/
     │   ├── auth.controller.js
     │   ├── cart.controller.js
