@@ -19,9 +19,9 @@
 ## Project Structure 📂
 
 jenutcart/
-├── client/ (React Frontend) 💻
+├── client/ # React Frontend
 │ ├── src/
-│ │ ├── Pages/ 📄
+│ │ ├── Pages/
 │ │ │ ├── About.jsx
 │ │ │ ├── Collections.jsx
 │ │ │ ├── Contact.jsx
@@ -29,7 +29,7 @@ jenutcart/
 │ │ │ ├── Login.jsx
 │ │ │ └── Register.jsx
 │ │ │
-│ │ ├── Components/ 🧩
+│ │ ├── Components/
 │ │ │ ├── Cart/
 │ │ │ │ └── CartSidebar.jsx
 │ │ │ ├── Common/
@@ -48,7 +48,7 @@ jenutcart/
 │ │ │ ├── ProductGrid.jsx
 │ │ │ └── SortOptions.jsx
 │ │ │
-│ │ ├── redux/ 🏪
+│ │ ├── redux/
 │ │ │ ├── slices/
 │ │ │ │ ├── auth.slice.js
 │ │ │ │ ├── cart.slice.js
@@ -60,7 +60,7 @@ jenutcart/
 │ │
 │ └── .env
 │
-└── server/ (Node.js Backend) ⚙️
+└── server/ # Node.js Backend
 ├── Controllers/
 │ ├── auth.controller.js
 │ ├── cart.controller.js
@@ -143,7 +143,7 @@ jenutcart/
 
 ### Home Page
 
-![Home Page](./Readmefolder/Home.png)
+![Home Page](.jenutechcart/Readmefolder/Home.png)
 _Landing page with featured products and categories_
 
 ### Product Listing
