@@ -166,7 +166,7 @@ _User registration form_
 
 ### Product Details
 
-![Product Details](/Readmefolder/ProductDetails.png)
+![Product Details](/jenutechcart/Readmefolder/ProductDetails.png)
 _Detailed product view with image gallery_
 
 ## Setup Instructions 🛠️
