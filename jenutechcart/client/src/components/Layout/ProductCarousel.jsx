@@ -3,9 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   ChevronLeft,
   ChevronRight,
-  Star,
-  ShoppingCart,
-  Heart,
+  Star
 } from "lucide-react";
 import { fetchArrivalProducts } from "../../redux/slices/product.slice";
 import { Link } from "react-router-dom";

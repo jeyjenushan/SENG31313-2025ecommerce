@@ -41,7 +41,7 @@ const Navbar = () => {
 
   //USE SELECTOR USING
   const { cart } = useSelector((state) => state.cart);
-  const { user, isAuthenticated } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
 
   const currentUser = user || JSON.parse(localStorage.getItem("userInfo"));
   useEffect(() => {

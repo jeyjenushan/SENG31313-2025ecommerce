@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { X, Plus, Minus, Trash2, ShoppingBag } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import {

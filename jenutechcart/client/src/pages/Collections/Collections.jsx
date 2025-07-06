@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { FaFilter } from "react-icons/fa";
-import { IoClose } from "react-icons/io5";
+
 
 import { useParams, useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";

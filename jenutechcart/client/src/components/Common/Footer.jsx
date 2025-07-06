@@ -124,7 +124,7 @@ const Footer = () => {
           <ul className="space-y-3 text-amber-700">
             <li>
               <Link
-                to="#"
+                to="/contact"
                 className="hover:text-amber-600 transition-colors flex items-center"
               >
                 <span className="w-2 h-2 bg-amber-400 rounded-full mr-2"></span>
@@ -133,20 +133,11 @@ const Footer = () => {
             </li>
             <li>
               <Link
-                to="#"
+                to="/about"
                 className="hover:text-amber-600 transition-colors flex items-center"
               >
                 <span className="w-2 h-2 bg-amber-400 rounded-full mr-2"></span>
                 About Us
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="#"
-                className="hover:text-amber-600 transition-colors flex items-center"
-              >
-                <span className="w-2 h-2 bg-amber-400 rounded-full mr-2"></span>
-                FAQs
               </Link>
             </li>
             <li>

@@ -32,9 +32,6 @@ const updateProductStock = async (productId, quantityChange) => {
 }
 
 
-
-
-
 //@route Post /api/cart
 //@desc Add a product to the cart for a guest or logged in user
 //@access Public

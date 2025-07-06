@@ -1,31 +1,31 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const Hero = () => {
   const heroImages = [
     {
-      url: "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=1200",
-      alt: "Modern smart home living room",
+      url: "https://images.pexels.com/photos/276724/pexels-photo-276724.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      alt: "Modern luxury living room",
       title: "Transform Your Home",
       subtitle:
         "Discover the future of smart living with our premium collection",
     },
     {
-      url: "https://images.unsplash.com/photo-1472396961693-142e6e269027?w=1200",
-      alt: "Smart home automation",
+      url: "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      alt: "Contemporary home interior",
       title: "Smart Solutions",
       subtitle: "Innovative technology for every room in your home",
     },
     {
-      url: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=1200",
-      alt: "Connected home devices",
+      url: "https://images.pexels.com/photos/1571453/pexels-photo-1571453.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      alt: "Modern kitchen design",
       title: "Connected Living",
       subtitle: "Experience seamless integration of all your smart devices",
     },
     {
-      url: "https://images.unsplash.com/photo-1486718448742-163732cd1544?w=1200",
-      alt: "Modern home interior",
+      url: "https://images.pexels.com/photos/1571452/pexels-photo-1571452.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      alt: "Stylish bedroom interior",
       title: "Modern Comfort",
       subtitle: "Elevate your lifestyle with intelligent home solutions",
     },
