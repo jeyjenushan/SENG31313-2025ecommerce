@@ -148,7 +148,7 @@ _Landing page with featured products and categories_
 
 ### Product Listing
 
-![Product Listing](./Readmefolder/Products.png)
+![Product Listing](/jenutechcart/Readmefolder/Products.png)
 _All products view with filtering options_
 
 ### Shopping Cart
