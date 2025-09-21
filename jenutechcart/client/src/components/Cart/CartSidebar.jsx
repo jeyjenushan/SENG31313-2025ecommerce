@@ -1,7 +1,7 @@
+import { useState, useEffect } from "react";
 import { X, Plus, Minus, Trash2, ShoppingBag } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  clearCart,
   removeAllItems,
   removeFromCart,
   updateCartItemQuantity,
@@ -12,13 +12,34 @@ const CartSidebar = ({ isOpen, onClose }) => {
   const items = cart?.products || [];
   const dispatch = useDispatch();
 
-  const total = items.reduce(
-    (acc, item) => acc + item.price * item.quantity,
+  // Local state for instant UI updates
+  const [localItems, setLocalItems] = useState([]);
+  const [localQuantities, setLocalQuantities] = useState({});
+
+  // Sync local state with Redux items whenever cart changes
+  useEffect(() => {
+    setLocalItems(items);
+    const quantities = {};
+    items.forEach((item) => {
+      quantities[item.productId] = item.quantity;
+    });
+    setLocalQuantities(quantities);
+  }, [items]);
+
+  // Calculate total using local state
+  const total = localItems.reduce(
+    (acc, item) =>
+      acc + item.price * (localQuantities[item.productId] ?? item.quantity),
     0
   );
 
   const handleQuantityChange = (item, newQuantity) => {
     if (newQuantity <= 0) {
+      // remove instantly from UI
+      setLocalItems((prev) =>
+        prev.filter((i) => i.productId !== item.productId)
+      );
+      // update Redux
       dispatch(
         removeFromCart({
           productId: item.productId,
@@ -27,6 +48,13 @@ const CartSidebar = ({ isOpen, onClose }) => {
         })
       );
     } else {
+      // update UI instantly
+      setLocalQuantities((prev) => ({
+        ...prev,
+        [item.productId]: newQuantity,
+      }));
+
+      // update Redux
       dispatch(
         updateCartItemQuantity({
           productId: item.productId,
@@ -39,6 +67,9 @@ const CartSidebar = ({ isOpen, onClose }) => {
   };
 
   const handleRemoveItem = (item) => {
+    // remove instantly from UI
+    setLocalItems((prev) => prev.filter((i) => i.productId !== item.productId));
+    // update Redux
     dispatch(
       removeFromCart({
         productId: item.productId,
@@ -49,6 +80,10 @@ const CartSidebar = ({ isOpen, onClose }) => {
   };
 
   const handleClearCart = () => {
+    // clear UI instantly
+    setLocalItems([]);
+    setLocalQuantities({});
+    // update Redux
     dispatch(removeAllItems());
   };
 
@@ -87,7 +122,7 @@ const CartSidebar = ({ isOpen, onClose }) => {
 
           {/* Cart Items */}
           <div className="flex-1 overflow-y-auto p-6">
-            {items.length === 0 ? (
+            {localItems.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-center">
                 <ShoppingBag className="w-16 h-16 text-slate-300 mb-4" />
                 <h3 className="text-lg font-medium text-slate-900 mb-2">
@@ -105,9 +140,9 @@ const CartSidebar = ({ isOpen, onClose }) => {
               </div>
             ) : (
               <div className="space-y-4">
-                {items.map((item) => (
+                {localItems.map((item) => (
                   <div
-                    key={item.id}
+                    key={item.productId}
                     className="flex items-center space-x-4 p-4 bg-amber-50/50 rounded-lg border border-amber-200/30"
                   >
                     <img
@@ -126,18 +161,26 @@ const CartSidebar = ({ isOpen, onClose }) => {
                     <div className="flex items-center space-x-2">
                       <button
                         onClick={() =>
-                          handleQuantityChange(item, item.quantity - 1)
+                          handleQuantityChange(
+                            item,
+                            (localQuantities[item.productId] ?? item.quantity) -
+                              1
+                          )
                         }
                         className="p-1 text-slate-500 hover:text-amber-800 hover:bg-amber-100 rounded transition-all duration-200"
                       >
                         <Minus className="w-4 h-4" />
                       </button>
                       <span className="w-8 text-center font-medium">
-                        {item.quantity}
+                        {localQuantities[item.productId] ?? item.quantity}
                       </span>
                       <button
                         onClick={() =>
-                          handleQuantityChange(item, item.quantity + 1)
+                          handleQuantityChange(
+                            item,
+                            (localQuantities[item.productId] ?? item.quantity) +
+                              1
+                          )
                         }
                         className="p-1 text-slate-500 hover:text-amber-800 hover:bg-amber-100 rounded transition-all duration-200"
                       >
@@ -157,7 +200,7 @@ const CartSidebar = ({ isOpen, onClose }) => {
           </div>
 
           {/* Footer */}
-          {items.length > 0 && (
+          {localItems.length > 0 && (
             <div className="border-t border-amber-200/50 p-6 space-y-4">
               <div className="flex justify-between items-center">
                 <span className="text-lg font-semibold text-slate-900">

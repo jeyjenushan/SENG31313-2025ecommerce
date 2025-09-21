@@ -41,9 +41,6 @@ export const fetchProductDetails=createAsyncThunk("products/fetchProductDetails"
 
 })
 
-
-
-
 //Async thunk to fetch a similar products 
 export const fetchSimilarProducts=createAsyncThunk("products/fetchSimilarProducts",async({id})=>{
       const {data}=await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products/similar/${id}`)
@@ -54,7 +51,6 @@ export const fetchSimilarProducts=createAsyncThunk("products/fetchSimilarProduct
 
 
 })
-
 
 //Async Thunk to arrivalProducts
 export const fetchArrivalProducts = createAsyncThunk(

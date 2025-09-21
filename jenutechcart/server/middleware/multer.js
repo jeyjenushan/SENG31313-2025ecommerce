@@ -1,13 +1,15 @@
+//multer library for handling for multipart/form-data
 const multer=require("multer")
 
 
-//store files in memory
+//store files in memory instead of disk
+//files will be available as Buffer object in req.files
 const storage=multer.memoryStorage()
 
 //only accept images
 const fileFilter=(req,file,cb)=>{
     if(file.mimetype.startsWith("image/")){
-        cb(null,true)
+        cb(null,true)//accept the file
     }else{
          cb(new Error('Only images (JPEG, PNG, etc.) are allowed!'), false);
     }

@@ -9,8 +9,6 @@ const signup=async(req,res)=>{
         const {name,email,password,confirmPassword}=req.body
         const image=req.file;
 
-
-        
     // Validate required fields
     if (!name || !email || !password || !confirmPassword) {
       return res.status(400).json({ error: "All fields are required!" });
